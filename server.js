@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config()
 
-const mongoUrl = process.env.MONGO_URL || `mongodb+srv://Paprika:${process.env.STRING_PW}@cluster0.6gvgrxz.mongodb.net/project-happy-thoughts-api?retryWrites=true&w=majority`;
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/project-mongo";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 
@@ -47,22 +47,14 @@ app.get("/", (req, res) => {
   res.send("This is a happy thought API!");
 });
 
-<<<<<<< HEAD
-// The post request
-app.post('/notes', async (req, res) => {
-  const { text } = req.body
-  const note = new Note ({ text })
-  await note.save()
-  res.json(note)
-=======
 // The post request - to read from database
-app.get('/thoughts', async (req, res) =>{
+app.get('/info', async (req, res) =>{
   const thoughts = await Thought.find().sort({createdAt: 'desc'}).limit(20).exec();
   res.json(thoughts);
 })
 
 // To add items to the database
-app.post('/thoughts', async(req, res) =>{
+app.post('/info', async(req, res) =>{
   // Collect the information sent by the client to our API 
   const {message , hearts} = req.body;
 
@@ -77,7 +69,7 @@ app.post('/thoughts', async(req, res) =>{
 })
 
 //PATCH => change/modify individual stuff
-app.patch("/thoughts/:id/like", async (req, res) => {
+app.patch("/info/:id/like", async (req, res) => {
   const { id } = req.params;
   try{
     const likeToUpdate = await Thought.findByIdAndUpdate(id, {$inc: {hearts: 1}})
@@ -85,7 +77,6 @@ app.patch("/thoughts/:id/like", async (req, res) => {
   } catch (error) {
     res.status(400).json({success: false, response: error});
   }
->>>>>>> d0f4fd158684dd99e36445aed89184f5ec0fea65
 })
 
 // Start the server
